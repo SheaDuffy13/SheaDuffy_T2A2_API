@@ -5,17 +5,22 @@ from models.book import Book, BookSchema
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 from controllers.cli_controller import db_commands
+from controllers.books_controller import books_bp
 import os
 
-app = Flask(__name__)
+def create_app():
+    app = Flask(__name__)
 
-app.config ['JSON_SORT_KEYS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
-app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
+    app.config ['JSON_SORT_KEYS'] = False
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+    app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
 
-db.init_app(app)
-ma.init_app(app)
-bcrypt.init_app(app)
-jwt.init_app(app)
+    db.init_app(app)
+    ma.init_app(app)
+    bcrypt.init_app(app)
+    jwt.init_app(app)
 
-app.register_blueprint(db_commands)
+    app.register_blueprint(db_commands)
+    app.register_blueprint(books_bp)
+
+    return app
