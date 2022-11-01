@@ -1,11 +1,14 @@
 from flask import Flask
-from init import db, ma
+from init import db, ma, bcrypt, jwt
+from flask_bcrypt import Bcrypt
+from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
     return 'hello world'
+
 
 
 # Define a custom CLI (terminal) command. Run with "flask create" in terminal.
@@ -33,7 +36,7 @@ def seed_db():
         Customer(
             name='John Smith',
             email='user@example.com',
-            password=bcrypt.generate_password_hash('bacon').decode('utf-8')
+            password=bcrypt.generate_password_hash('bacon').decode('utf-8'),
             address = '123 road St, Suburb, QLD',
             phone = '100 200 300 1',
         )
@@ -63,19 +66,19 @@ def seed_db():
             author = 'Jane Austin',
             description = 'idk',
             category = 'romance'
-        )
+        ),
         Book(
             title = 'Twilight',
             author = 'Stephenie Meyer',
             description = 'Hold on tight spider monkey',
             category = 'romance'
-        )
+        ),
         Book(
             title = 'Misery',
             author = 'Stephen King',
             description = 'crazy lady break ankles',
             category = 'horror'
-        )
+        ),
         Book(
             title = 'The Green Mile',
             author = 'Stephen King',
