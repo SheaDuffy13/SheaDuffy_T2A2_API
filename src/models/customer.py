@@ -9,7 +9,7 @@ class Customer(db.Model):
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
     address = db.Column(db.String)
-    phone = db.Column(db.int)
+    phone = db.Column(db.String)
     is_admin = db.Column(db.Boolean, default=False)
 
     # orders = db.relationship('Order', back_populates='user', cascade='all, delete')

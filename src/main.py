@@ -1,13 +1,22 @@
 from flask import Flask
 from init import db, ma, bcrypt, jwt
+from models.customer import Customer, CustomerSchema
+from models.book import Book, BookSchema
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
+import os
 
 app = Flask(__name__)
 
-@app.route('/')
-def home():
-    return 'hello world'
+app.config ['JSON_SORT_KEYS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
+
+db.init_app(app)
+ma.init_app(app)
+bcrypt.init_app(app)
+jwt.init_app(app)
+
 
 
 
@@ -28,7 +37,8 @@ def seed_db():
         Customer(
             name = 'Admin Joe',
             email='admin@example.com',
-            password=bcrypt.generate_password_hash('eggs').decode('utf-8'),
+            # password=bcrypt.generate_password_hash('eggs').decode('utf-8'),
+            password = 'eggs',
             address = '',
             phone = '',
             is_admin=True
@@ -36,7 +46,8 @@ def seed_db():
         Customer(
             name='John Smith',
             email='user@example.com',
-            password=bcrypt.generate_password_hash('bacon').decode('utf-8'),
+            # password=bcrypt.generate_password_hash('bacon').decode('utf-8'),
+            password = 'eggs',
             address = '123 road St, Suburb, QLD',
             phone = '100 200 300 1',
         )
@@ -46,25 +57,25 @@ def seed_db():
         Book(
             title = 'Lord of the Rings: Fellowship of the Ring',
             author = 'J. R. R. Tolkien',
-            description = 'An epic fantasy',
+            description = 'They\'re taking the hobbits to Isengard',
             category = 'fantasy'
         ),
         Book(
             title = 'Lord of the Rings: The Two Towers',
             author = 'J. R. R. Tolkien',
-            description = 'An epic fantasy',
+            description = 'They\'re taking the hobbits to Isengard',
             category = 'fantasy'
         ),
         Book(
             title = 'Lord of the Rings: Return of the King',
             author = 'J. R. R. Tolkien',
-            description = 'An epic fantasy',
+            description = 'They\'re taking the hobbits to Isengard',
             category = 'fantasy'
         ),
         Book(
             title = 'Sense and Sensibility',
             author = 'Jane Austin',
-            description = 'idk',
+            description = 'ye olde jaunt',
             category = 'romance'
         ),
         Book(
@@ -80,9 +91,9 @@ def seed_db():
             category = 'horror'
         ),
         Book(
-            title = 'The Green Mile',
-            author = 'Stephen King',
-            description = 'sad boi',
+            title = 'The Call of Cthulhu',
+            author = 'H. P. Lovecraft',
+            description = 'calamari boi',
             category = 'horror'
         )
     ]
