@@ -43,6 +43,31 @@ def seed_db():
     db.session.add_all(customers)
     db.session.commit()
 
+    categories = [
+        Category(
+            name = 'horror'
+        ),
+        Category(
+            name='romance'
+        ),
+        Category(
+            name='crime'
+        ),
+        Category(
+            name='sci-fi'
+        ),
+        Category(
+            name='non-fiction'
+        ),
+        Category(
+            name='fantasy'
+        ),
+    ]
+
+    # Add the object as a new row to the table
+    db.session.add_all(categories)
+    db.session.commit()
+
     books = [
         Book(
             title = 'Lord of the Rings: Fellowship of the Ring',
@@ -85,35 +110,40 @@ def seed_db():
             author = 'H. P. Lovecraft',
             description = 'calamari boi',
             category = 'horror'
+        ),
+        Book(
+            title = 'A Brief History of Time',
+            author = 'Stephen Hawking',
+            description = 'Explores profound questions',
+            category = 'non-fiction'
+        ),
+        Book(
+            title = 'A Short History of Nearly Everything',
+            author = 'Bill Bryson',
+            description = 'A summation of life, the universe, and everything',
+            category = 'non-fiction'
+        ),
+        Book(
+            title = 'The War of the Worlds',
+            author = 'H. G. Wells',
+            description = 'A Martian invasion',
+            category = 'sci-fi'
+        ),
+        Book(
+            title = 'Dune',
+            author = 'Frank Herbert',
+            description = 'One of the bestselling science fiction novel of all time',
+            category = 'sci-fi'
+        ),
+        Book(
+            title = 'Gone Girl',
+            author = 'Gillian Flynn',
+            description = 'A possible murder mystery',
+            category = 'crime'
         )
     ]
     
     db.session.add_all(books)
-    db.session.commit()
-
-    categories = [
-        Category(
-            name = 'horror'
-        ),
-        Category(
-            name='romance'
-        ),
-        Category(
-            name='crime'
-        ),
-        Category(
-            name='sci-fi'
-        ),
-        Category(
-            name='non-fiction'
-        ),
-        Category(
-            name='fantasy'
-        ),
-    ]
-
-    # Add the object as a new row to the table
-    db.session.add_all(categories)
     db.session.commit()
 
 

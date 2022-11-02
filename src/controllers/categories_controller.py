@@ -14,16 +14,16 @@ def get_all_categories():
     categories = db.session.scalars(stmt)
     return CategorySchema(many=True).dump(categories)
 
-@categories_bp.route('/<string:cat_name>/')
-def get_category(cat_name):
-    stmt = db.select(Category).filter_by(name=cat_name)
+@categories_bp.route('/<string:category_name>/')
+def get_category(category_name):
+    stmt = db.select(Category).filter_by(name=category_name)
     cat = db.session.scalar(stmt)
-    book_stmt = db.select(Book).filter_by(category=cat_name.lower())
+    book_stmt = db.select(Book).filter_by(category=category_name.lower())
     books = db.session.scalars(book_stmt)
     if cat:
         return BookSchema(many=True).dump(books)
     else:
-        return {'error': f'category not found with name {cat_name}'}, 404
+        return {'error': f'category not found with name {category_name}'}, 404
 
 # @categories_bp.route('/<string:category>/')
 # def get_category(category):
