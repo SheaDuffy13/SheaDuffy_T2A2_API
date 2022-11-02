@@ -15,10 +15,10 @@ def get_all_books():
 
 @books_bp.route('/<int:id>/')
 def get_one_book(id):
-    # title = title.capitalize()
     stmt = db.select(Book).filter_by(id=id)
     book = db.session.scalar(stmt)
     if book:
         return BookSchema().dump(book)
     else:
         return {'error': f'Book not found with id {id}'}, 404
+

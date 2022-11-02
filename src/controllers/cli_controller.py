@@ -1,7 +1,9 @@
+from unicodedata import category
 from flask import Blueprint
 from init import db, bcrypt
 from models.book import Book
 from models.customer import Customer
+from models.category import Category
 
 db_commands = Blueprint('db', __name__)
 
@@ -88,4 +90,31 @@ def seed_db():
     
     db.session.add_all(books)
     db.session.commit()
+
+    categories = [
+        Category(
+            name = 'horror'
+        ),
+        Category(
+            name='romance'
+        ),
+        Category(
+            name='crime'
+        ),
+        Category(
+            name='sci-fi'
+        ),
+        Category(
+            name='non-fiction'
+        ),
+        Category(
+            name='fantasy'
+        ),
+    ]
+
+    # Add the object as a new row to the table
+    db.session.add_all(categories)
+    db.session.commit()
+
+
     print("Table seeded")
