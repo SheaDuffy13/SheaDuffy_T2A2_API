@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from init import db
-from models.customer import Customer, CustomerSchema
+from models.user import User, UserSchema
 from models.book import Book, BookSchema
 from flask_jwt_extended import jwt_required, get_jwt_identity
 

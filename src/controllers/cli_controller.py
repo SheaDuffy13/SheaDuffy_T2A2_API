@@ -2,7 +2,7 @@ from unicodedata import category
 from flask import Blueprint
 from init import db, bcrypt
 from models.book import Book
-from models.customer import Customer
+from models.user import User
 from models.category import Category
 
 db_commands = Blueprint('db', __name__)
@@ -19,8 +19,8 @@ def drop_db():
 
 @db_commands.cli.command('seed')
 def seed_db():
-    customers = [
-        Customer(
+    users = [
+        User(
             name = 'Admin Joe',
             email='admin@example.com',
             password=bcrypt.generate_password_hash('eggs').decode('utf-8'),
@@ -29,7 +29,7 @@ def seed_db():
             phone = '',
             is_admin=True
         ),
-        Customer(
+        User(
             name='John Smith',
             email='user@example.com',
             password=bcrypt.generate_password_hash('bacon').decode('utf-8'),
@@ -40,7 +40,7 @@ def seed_db():
     ]
 
     # Add the object as a new row to the table
-    db.session.add_all(customers)
+    db.session.add_all(users)
     db.session.commit()
 
     categories = [

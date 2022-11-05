@@ -1,6 +1,6 @@
 from flask import Flask
 from init import db, ma, bcrypt, jwt
-from models.customer import Customer, CustomerSchema
+from models.user import User, UserSchema
 from models.book import Book, BookSchema
 from models.category import Category, CategorySchema
 from flask_bcrypt import Bcrypt
@@ -8,6 +8,7 @@ from flask_jwt_extended import JWTManager
 from controllers.cli_controller import db_commands
 from controllers.books_controller import books_bp
 from controllers.categories_controller import categories_bp
+from controllers.auth_controller import auth_bp
 import os
 
 def create_app():
@@ -25,5 +26,6 @@ def create_app():
     app.register_blueprint(db_commands)
     app.register_blueprint(books_bp)
     app.register_blueprint(categories_bp)
+    app.register_blueprint(auth_bp)
 
     return app
