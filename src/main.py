@@ -4,7 +4,7 @@ from models.user import User, UserSchema
 from models.book import Book, BookSchema
 from models.category import Category, CategorySchema
 from flask_bcrypt import Bcrypt
-from flask_jwt_extended import JWTManager
+# from flask_jwt_extended import JWTManager
 from controllers.cli_controller import db_commands
 from controllers.books_controller import books_bp
 from controllers.categories_controller import categories_bp

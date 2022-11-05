@@ -24,7 +24,6 @@ def seed_db():
             name = 'Admin Joe',
             email='admin@example.com',
             password=bcrypt.generate_password_hash('eggs').decode('utf-8'),
-            # password = 'eggs',
             address = '',
             phone = '',
             is_admin=True
