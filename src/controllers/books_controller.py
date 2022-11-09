@@ -54,17 +54,17 @@ def get_one_book(id):
         return {'error': f'Book not found with id {id}'}, 404
 
 
-@books_bp.route('/create_book/', methods=['POST'])
+@books_bp.route('/add_book/', methods=['POST'])
 @jwt_required()
-def create_book():
+def add_book():
     authorize()
-    # Create a new Book model instance
+    # Add a new Book model instance
     data = BookSchema().load(request.json)
     book = Book(
         title = data['title'],
         author = data['author'],
         description = data['description'],
-        category = data['category']
+        category_id = data['category_id']
     )
     # Add and commit book to DB
     db.session.add(book)
@@ -77,12 +77,29 @@ def create_book():
 @jwt_required()
 def delete_one_book(id):
     authorize()
-
     stmt = db.select(Book).filter_by(id=id)
     book = db.session.scalar(stmt)
     if book:
         db.session.delete(book)
         db.session.commit()
         return {'message': f"Book '{book.title}' deleted successfully"}
+    else:
+        return {'error': f'Book not found with id {id}'}, 404
+
+
+@books_bp.route('/update/<int:id>/', methods=['PUT', 'PATCH'])
+@jwt_required()
+def update_one_book(id):
+    authorize()
+    stmt = db.select(Book).filter_by(id=id)
+    book = db.session.scalar(stmt)
+    if book:
+        book.title = request.json.get('title') or book.title
+        book.author = request.json.get('author') or book.author
+        book.description = request.json.get('description') or book.description
+        book.category_id = request.json.get('category_id') or book.category_id
+
+        db.session.commit()  
+        return BookSchema().dump(book)
     else:
         return {'error': f'Book not found with id {id}'}, 404
