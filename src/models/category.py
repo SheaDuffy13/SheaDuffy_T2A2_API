@@ -6,6 +6,7 @@ class Category(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
+    books = db.relationship('Book', back_populates='category')
 
     # orders = db.relationship('Order', back_populates='book', cascade='all, delete')
 

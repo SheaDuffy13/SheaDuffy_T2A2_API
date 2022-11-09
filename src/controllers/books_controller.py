@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from init import db
 from models.user import User, UserSchema
 from models.book import Book, BookSchema
@@ -14,6 +14,49 @@ def get_all_books():
     books = db.session.scalars(stmt)
     return BookSchema(many=True).dump(books)
 
+
+# @books_bp.route("/search/title/")
+# def search_title():
+#     # create an empty list in case the query string is not valid
+#     # if request.json['title']:
+#     stmt = db.select(Book).filter_by(title=request.json['title'].title())
+#     books = db.session.scalars(stmt)
+#     return BookSchema(many=True).dump(books)
+
+# @books_bp.route("/search/author/")
+# def search_author():
+#     # elif request.json['author']:
+#     stmt = db.select(Book).filter_by(author=request.json['author'].title())
+#     books = db.session.scalars(stmt)
+#     return BookSchema(many=True).dump(books)
+
+
+# @books_bp.route("/search", methods=["GET"])
+# def search_books():
+#     # create an empty list in case the query string is not valid
+#     cards_list = []
+#     if request.json['title']:
+#         stmt = db.select(Book).filter_by(title=request.json['title'].title())
+#         cards_list = db.session.scalars(stmt)
+#     elif request.json['author']:
+#         stmt = db.select(Book).filter_by(author=request.json['author'].title())
+#         cards_list = db.session.scalars(stmt)
+#     return BookSchema(many=True).dump(cards_list)
+
+
+@books_bp.route("/search")
+def search_books():
+    # create an empty list in case the query string is not valid
+    cards_list = []
+    if request.json['title']:
+        cards_list = Book.query.filter_by(title=request.args.get('title'))
+    elif request.json['author']:
+        cards_list = Book.query.filter_by(author=request.args.get('author'))
+
+    return BookSchema(many=True).dump(cards_list)
+
+
+
 @books_bp.route('/<int:id>/')
 def get_one_book(id):
     stmt = db.select(Book).filter_by(id=id)
@@ -24,7 +67,7 @@ def get_one_book(id):
         return {'error': f'Book not found with id {id}'}, 404
 
 
-@books_bp.route('/create_book', methods=['POST'])
+@books_bp.route('/create_book/', methods=['POST'])
 @jwt_required()
 def create_book():
     authorize()

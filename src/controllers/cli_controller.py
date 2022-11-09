@@ -50,15 +50,6 @@ def seed_db():
             name='romance'
         ),
         Category(
-            name='crime'
-        ),
-        Category(
-            name='sci-fi'
-        ),
-        Category(
-            name='non-fiction'
-        ),
-        Category(
             name='fantasy'
         ),
     ]
@@ -69,76 +60,46 @@ def seed_db():
 
     books = [
         Book(
-            title = 'Lord of the Rings: Fellowship of the Ring',
-            author = 'J. R. R. Tolkien',
-            description = 'They\'re taking the hobbits to Isengard',
-            category = 'fantasy'
+            title = 'Nevernight',
+            author = 'Jay Kristoff',
+            description = 'A booky book',
+            # category = 'fantasy'
+            category_id = categories[2].id
         ),
         Book(
-            title = 'Lord of the Rings: The Two Towers',
-            author = 'J. R. R. Tolkien',
-            description = 'They\'re taking the hobbits to Isengard',
-            category = 'fantasy'
+            title = 'Empire Of The Vampire',
+            author = 'Jay Kristoff',
+            description = 'A booky book book',
+            # category = 'fantasy'
+            category_id = categories[2].id
         ),
         Book(
-            title = 'Lord of the Rings: Return of the King',
-            author = 'J. R. R. Tolkien',
-            description = 'They\'re taking the hobbits to Isengard',
-            category = 'fantasy'
-        ),
-        Book(
-            title = 'Sense and Sensibility',
+            title = 'Sense And Sensibility',
             author = 'Jane Austin',
-            description = 'ye olde jaunt',
-            category = 'romance'
+            description = 'Ye olde jaunt',
+            # category = 'romance'
+            category_id = categories[1].id
         ),
         Book(
             title = 'Twilight',
             author = 'Stephenie Meyer',
             description = 'Hold on tight spider monkey',
-            category = 'romance'
+            # category = 'romance'
+            category_id = categories[1].id
         ),
         Book(
             title = 'Misery',
             author = 'Stephen King',
             description = 'crazy lady break ankles',
-            category = 'horror'
+            # category = 'horror'
+            category_id = categories[0].id
         ),
         Book(
-            title = 'The Call of Cthulhu',
+            title = 'The Call Of Cthulhu',
             author = 'H. P. Lovecraft',
             description = 'calamari boi',
-            category = 'horror'
-        ),
-        Book(
-            title = 'A Brief History of Time',
-            author = 'Stephen Hawking',
-            description = 'Explores profound questions',
-            category = 'non-fiction'
-        ),
-        Book(
-            title = 'A Short History of Nearly Everything',
-            author = 'Bill Bryson',
-            description = 'A summation of life, the universe, and everything',
-            category = 'non-fiction'
-        ),
-        Book(
-            title = 'The War of the Worlds',
-            author = 'H. G. Wells',
-            description = 'A Martian invasion',
-            category = 'sci-fi'
-        ),
-        Book(
-            title = 'Dune',
-            author = 'Frank Herbert',
-            description = 'One of the bestselling science fiction novel of all time',
-            category = 'sci-fi'
-        ),
-        Book(
-            title = 'Gone Girl',
-            author = 'Gillian Flynn',
-            description = 'A possible murder mystery',
-            category = 'crime'
+            # category = 'horror'
+            category_id = categories[0].id
         )
     ]
     
