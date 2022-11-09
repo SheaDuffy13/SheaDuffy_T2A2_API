@@ -71,6 +71,7 @@ def add_book():
     db.session.commit()
     # Respond to client
     return BookSchema().dump(book), 201
+    # CONSTRAINTS?????????
 
 
 @books_bp.route('/delete_book/<int:id>/', methods=['DELETE'])

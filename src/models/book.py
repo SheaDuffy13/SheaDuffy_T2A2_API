@@ -1,6 +1,8 @@
 from init import db, ma
-from marshmallow import fields
-from marshmallow.validate import OneOf
+from marshmallow import fields, validate
+from marshmallow.validate import Length, OneOf, And, Regexp
+from marshmallow.exceptions import ValidationError
+
 
 # VALID_CATEGORIES = ('horror', 'fantasy', 'romance', 'sci-fi', 'crime', 'non-fiction')
 
