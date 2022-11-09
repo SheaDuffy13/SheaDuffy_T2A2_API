@@ -31,30 +31,17 @@ def get_all_books():
 #     return BookSchema(many=True).dump(books)
 
 
-# @books_bp.route("/search", methods=["GET"])
-# def search_books():
-#     # create an empty list in case the query string is not valid
-#     cards_list = []
-#     if request.json['title']:
-#         stmt = db.select(Book).filter_by(title=request.json['title'].title())
-#         cards_list = db.session.scalars(stmt)
-#     elif request.json['author']:
-#         stmt = db.select(Book).filter_by(author=request.json['author'].title())
-#         cards_list = db.session.scalars(stmt)
-#     return BookSchema(many=True).dump(cards_list)
-
-
-@books_bp.route("/search")
+@books_bp.route("/search/", methods=["GET"])
 def search_books():
-    # create an empty list in case the query string is not valid
-    cards_list = []
-    if request.json['title']:
-        cards_list = Book.query.filter_by(title=request.args.get('title'))
-    elif request.json['author']:
-        cards_list = Book.query.filter_by(author=request.args.get('author'))
-
-    return BookSchema(many=True).dump(cards_list)
-
+    # if request.json['title']: 
+    if request.json.get('title'):
+        stmt = db.select(Book).filter_by(title=request.json['title'].title())
+        books = db.session.scalars(stmt)
+    # elif request.json['author']:
+    elif request.json.get('author'):
+        stmt = db.select(Book).filter_by(author=request.json['author'].title())
+        books = db.session.scalars(stmt)
+    return BookSchema(many=True).dump(books)
 
 
 @books_bp.route('/<int:id>/')
