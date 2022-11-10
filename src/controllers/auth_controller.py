@@ -47,17 +47,18 @@ def auth_login():
         return {'error': 'Invalid email or password'}, 401
 
 
-# @auth_bp.route('/delete_user/<string:email>/', methods=['DELETE'])
-# @jwt_required()
-# def delete_user(email):
-#     stmt = db.select(User).filter_by(email=email)
-#     user = db.session.scalar(stmt)
-#     if user:
-#         db.session.delete(user)
-#         db.session.commit()
-#         return {'message': f"User '{user.name}' deleted successfully"}
-#     else:
-#         return {'error': f'User not found with email {email}'}, 404
+@auth_bp.route('/delete_user/<string:email>/', methods=['DELETE'])
+@jwt_required()
+def delete_user(email):
+    authorize()
+    stmt = db.select(User).filter_by(email=email)
+    user = db.session.scalar(stmt)
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+        return {'message': f"User '{user.name}' deleted successfully"}
+    else:
+        return {'error': f'User not found with email {email}'}, 404
 
 
 def authorize():

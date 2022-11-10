@@ -63,43 +63,55 @@ def seed_db():
             title = 'Nevernight',
             author = 'Jay Kristoff',
             description = 'A booky book',
+            price = 10.00,
             # category = 'fantasy'
-            category_id = categories[2].id
+            # category_id = categories[2].id
+            category = categories[2]
         ),
         Book(
             title = 'Empire Of The Vampire',
             author = 'Jay Kristoff',
             description = 'A booky book book',
+            price = 10.00,
             # category = 'fantasy'
-            category_id = categories[2].id
+            # category_id = categories[2].id
+            category = categories[2]
         ),
         Book(
             title = 'Sense And Sensibility',
             author = 'Jane Austin',
             description = 'Ye olde jaunt',
+            price = 10.00,
             # category = 'romance'
-            category_id = categories[1].id
+            # category_id = categories[1].id
+            category = categories[1]
         ),
         Book(
             title = 'Twilight',
             author = 'Stephenie Meyer',
             description = 'Hold on tight spider monkey',
+            price = 10.00,
             # category = 'romance'
-            category_id = categories[1].id
+            # category_id = categories[1].id
+            category = categories[1]
         ),
         Book(
             title = 'Misery',
             author = 'Stephen King',
             description = 'crazy lady break ankles',
+            price = 10.00,
             # category = 'horror'
-            category_id = categories[0].id
+            # category_id = categories[0].id
+            category = categories[0]
         ),
         Book(
             title = 'The Call Of Cthulhu',
             author = 'H. P. Lovecraft',
             description = 'calamari boi',
+            price = 10.00,
             # category = 'horror'
-            category_id = categories[0].id
+            # category_id = categories[0].id
+            category = categories[0]
         )
     ]
     

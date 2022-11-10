@@ -11,5 +11,8 @@ class Category(db.Model):
     # orders = db.relationship('Order', back_populates='book', cascade='all, delete')
 
 class CategorySchema(ma.Schema):
+    books = fields.List(fields.Nested('BookSchema', exclude=['category']))
+
     class Meta:
-        fields = ('id', 'name')
+        ordered = True
+        fields = ('id', 'name', 'books')

@@ -16,5 +16,6 @@ class User(db.Model):
 
 class UserSchema(ma.Schema):
     class Meta:
+        ordered = True
         fields = ('id', 'name', 'email', 'password', 'address', 'phone', 'is_admin')
 

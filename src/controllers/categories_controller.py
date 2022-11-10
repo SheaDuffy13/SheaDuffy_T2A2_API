@@ -12,20 +12,19 @@ categories_bp = Blueprint('categories', __name__, url_prefix='/categories')
 def get_all_categories():
     stmt = db.select(Category)
     categories = db.session.scalars(stmt)
-    return CategorySchema(many=True).dump(categories)
+    return CategorySchema(many=True, exclude=['books']).dump(categories)
 
 # @categories_bp.route('/<string:category_name>/')
 @categories_bp.route('/<int:id>/')
 def get_category(id):
-    # stmt = db.select(Category).filter_by(name=category_name)
-    # stmt = db.select(Category).filter_by(id=id)
-    # categ = db.session.scalar(stmt)
-    # book_stmt = db.select(Book).filter_by(category=category_name.lower())
-    book_stmt = db.select(Book).filter_by(category_id=id)
+
+    # book_stmt = db.select(Category.books).filter_by(id=id)
+    # book_stmt = db.select(Book).filter_by(category_id=id)
+    book_stmt = db.select(Category).filter_by(id=id)
     books = db.session.scalars(book_stmt)
     if books:
-        return BookSchema(many=True).dump(books)
-        # return CategorySchema().dump(categ) and BookSchema(many=True).dump(books) 
+        # return BookSchema(many=True).dump(books)
+        return CategorySchema(many=True).dump(books)
     else:
         return {'error': f'category not found with id {id}'}, 404
 

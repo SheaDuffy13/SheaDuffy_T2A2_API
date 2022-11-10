@@ -12,7 +12,7 @@ books_bp = Blueprint('books', __name__, url_prefix='/books')
 def get_all_books():
     stmt = db.select(Book)
     books = db.session.scalars(stmt)
-    return BookSchema(many=True).dump(books)
+    return BookSchema(many=True, exclude=['category_id']).dump(books)
 
 
 # @books_bp.route("/search/title/")
@@ -30,6 +30,15 @@ def get_all_books():
 #     books = db.session.scalars(stmt)
 #     return BookSchema(many=True).dump(books)
 
+@books_bp.route('/<int:id>/')
+def get_one_book(id):
+    stmt = db.select(Book).filter_by(id=id)
+    book = db.session.scalar(stmt)
+    if book:
+        return BookSchema(exclude=['category_id']).dump(book)
+    else:
+        return {'error': f'Book not found with id {id}'}, 404
+
 
 @books_bp.route("/search/", methods=["GET"])
 def search_books():
@@ -41,17 +50,7 @@ def search_books():
     elif request.json.get('author'):
         stmt = db.select(Book).filter_by(author=request.json['author'].title())
         books = db.session.scalars(stmt)
-    return BookSchema(many=True).dump(books)
-
-
-@books_bp.route('/<int:id>/')
-def get_one_book(id):
-    stmt = db.select(Book).filter_by(id=id)
-    book = db.session.scalar(stmt)
-    if book:
-        return BookSchema().dump(book)
-    else:
-        return {'error': f'Book not found with id {id}'}, 404
+    return BookSchema(many=True, exclude=['category_id']).dump(books)
 
 
 @books_bp.route('/add_book/', methods=['POST'])
@@ -64,13 +63,15 @@ def add_book():
         title = data['title'],
         author = data['author'],
         description = data['description'],
+        price = data['price'],
+        # category = data['category']
         category_id = data['category_id']
     )
     # Add and commit book to DB
     db.session.add(book)
     db.session.commit()
     # Respond to client
-    return BookSchema().dump(book), 201
+    return BookSchema(exclude=['category_id']).dump(book), 201
     # CONSTRAINTS?????????
 
 
@@ -98,9 +99,10 @@ def update_one_book(id):
         book.title = request.json.get('title') or book.title
         book.author = request.json.get('author') or book.author
         book.description = request.json.get('description') or book.description
+        book.price = request.json.get('price') or book.price
         book.category_id = request.json.get('category_id') or book.category_id
 
-        db.session.commit()  
-        return BookSchema().dump(book)
+        db.session.commit()
+        return BookSchema(exclude=['category_id']).dump(book)
     else:
         return {'error': f'Book not found with id {id}'}, 404
