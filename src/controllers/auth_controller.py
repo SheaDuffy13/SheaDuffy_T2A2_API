@@ -8,31 +8,6 @@ from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_requir
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
-@auth_bp.route('/users/')
-def get_users():
-    stmt = db.select(User)
-    users = db.session.scalars(stmt)
-    return UserSchema(many=True, exclude=['password']).dump(users)    
-
-
-@auth_bp.route('/register/', methods=['POST'])
-def auth_register():
-    try:
-        # Create a new User model instance from the user_info
-        user = User(
-            email = request.json['email'],
-            password = bcrypt.generate_password_hash(request.json['password']).decode('utf8'),
-            name = request.json.get('name')
-        )
-        # Add and commit user to DB
-        db.session.add(user)
-        db.session.commit()
-        # Respond to client
-        return UserSchema(exclude=['password']).dump(user), 201
-    except IntegrityError:
-        return {'error': 'Email address already in use'}, 409
-
-
 @auth_bp.route('/login/', methods=['POST'])
 def auth_login():
     # Find a user by email address
@@ -45,20 +20,6 @@ def auth_login():
         return {'email': user.email, 'token': token, 'is_admin': user.is_admin}
     else:
         return {'error': 'Invalid email or password'}, 401
-
-
-@auth_bp.route('/delete_user/<string:email>/', methods=['DELETE'])
-@jwt_required()
-def delete_user(email):
-    authorize()
-    stmt = db.select(User).filter_by(email=email)
-    user = db.session.scalar(stmt)
-    if user:
-        db.session.delete(user)
-        db.session.commit()
-        return {'message': f"User '{user.name}' deleted successfully"}
-    else:
-        return {'error': f'User not found with email {email}'}, 404
 
 
 def authorize():

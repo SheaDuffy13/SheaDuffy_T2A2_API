@@ -2,12 +2,12 @@ from flask import Flask
 from init import db, ma, bcrypt, jwt
 from models.user import User, UserSchema
 from models.book import Book, BookSchema
-from models.category import Category, CategorySchema
 from flask_bcrypt import Bcrypt
 # from flask_jwt_extended import JWTManager
 from controllers.cli_controller import db_commands
 from controllers.books_controller import books_bp
-from controllers.categories_controller import categories_bp
+from controllers.authors_controller import authors_bp
+from controllers.users_controller import users_bp
 from controllers.auth_controller import auth_bp
 from marshmallow.exceptions import ValidationError
 
@@ -20,6 +20,10 @@ def create_app():
     @app.errorhandler(ValidationError)
     def validation_error(err):
         return {'error': err.messages}, 400
+
+    @app.errorhandler(ValueError)
+    def value_err(err):
+        return {"error": str(err)}, 400
 
     @app.errorhandler(400)
     def bad_request(err):
@@ -49,7 +53,8 @@ def create_app():
 
     app.register_blueprint(db_commands)
     app.register_blueprint(books_bp)
-    app.register_blueprint(categories_bp)
+    app.register_blueprint(authors_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(users_bp)
 
     return app

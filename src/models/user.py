@@ -1,5 +1,8 @@
 from init import db, ma
 from marshmallow import fields
+from marshmallow import fields, validate
+from marshmallow.validate import Length, OneOf, And, Regexp
+from marshmallow.exceptions import ValidationError
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -15,6 +18,10 @@ class User(db.Model):
     # orders = db.relationship('Order', back_populates='user', cascade='all, delete')
 
 class UserSchema(ma.Schema):
+
+    phone = fields.Integer(validate=Regexp('^[0-9 ]+$', error='Only numbers are accepted')
+    )
+
     class Meta:
         ordered = True
         fields = ('id', 'name', 'email', 'password', 'address', 'phone', 'is_admin')
