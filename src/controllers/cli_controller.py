@@ -93,7 +93,7 @@ def seed_db():
             author = authors[0],
             description = 'A booky book',
             price = 10.00,
-            year_published = '2005-04-07',
+            date_published = '2005-04-07',
             category = 'fantasy'
             # category_id = categories[2].id
             # category = categories[2]
@@ -104,7 +104,7 @@ def seed_db():
             author = authors[0],
             description = 'A booky book book',
             price = 10.00,
-            year_published = '2005-04-07',
+            date_published = '2005-04-07',
             category = 'fantasy'
             # category_id = categories[2].id
             # category = categories[2]
@@ -115,7 +115,7 @@ def seed_db():
             author = authors[1],
             description = 'Ye olde jaunt',
             price = 10.00,
-            year_published = '2005-04-07',
+            date_published = '2005-04-07',
             category = 'romance'
             # category_id = categories[1].id
             # category = categories[1]
@@ -126,7 +126,7 @@ def seed_db():
             author = authors[2],
             description = 'Hold on tight spider monkey',
             price = 10.00,
-            year_published = '2005-04-07',
+            date_published = '2005-04-07',
             category = 'romance'
             # category_id = categories[1].id
             # category = categories[1]
@@ -137,7 +137,7 @@ def seed_db():
             author = authors[3],
             description = 'crazy lady break ankles',
             price = 10.00,
-            year_published = '2005-04-07',
+            date_published = '2005-04-07',
             category = 'horror'
             # category_id = categories[0].id
             # category = categories[0]
@@ -148,7 +148,7 @@ def seed_db():
             author = authors[4],
             description = 'calamari boi',
             price = 10.00,
-            year_published = '2005-04-07',
+            date_published = '2005-04-07',
             category = 'horror'
             # category_id = categories[0].id
             # category = categories[0]

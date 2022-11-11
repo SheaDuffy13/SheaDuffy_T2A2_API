@@ -5,6 +5,9 @@ from models.book import Book, BookSchema
 from models.author import Author, AuthorSchema
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from controllers.auth_controller import authorize
+from datetime import date, datetime
+from marshmallow.exceptions import ValidationError
+
 
 
 books_bp = Blueprint('books', __name__, url_prefix='/books')
@@ -16,21 +19,6 @@ def get_all_books():
     return BookSchema(many=True, exclude=['author_id']).dump(books)
 
 
-# @books_bp.route("/search/title/")
-# def search_title():
-#     # create an empty list in case the query string is not valid
-#     # if request.json['title']:
-#     stmt = db.select(Book).filter_by(title=request.json['title'].title())
-#     books = db.session.scalars(stmt)
-#     return BookSchema(many=True).dump(books)
-
-# @books_bp.route("/search/author/")
-# def search_author():
-#     # elif request.json['author']:
-#     stmt = db.select(Book).filter_by(author=request.json['author'].title())
-#     books = db.session.scalars(stmt)
-#     return BookSchema(many=True).dump(books)
-
 @books_bp.route('/<int:id>/')
 def get_one_book(id):
     stmt = db.select(Book).filter_by(id=id)
@@ -41,7 +29,7 @@ def get_one_book(id):
         return {'error': f'Book not found with id {id}'}, 404
 
 
-@books_bp.route("/search/", methods=["GET"])
+@books_bp.route("/search/")
 def search_books():
     # if request.json['title']: 
     if request.json.get('title'):
@@ -66,7 +54,7 @@ def add_book():
         author_id = data['author_id'],
         description = data['description'],
         price = data['price'],
-        year_published = data['year_published'],
+        date_published = data['date_published'],
     )
 
     # Add and commit book to DB
@@ -88,9 +76,16 @@ def update_book(id):
         book.author_id = request.json.get('author_id') or book.author_id
         book.description = request.json.get('description') or book.description
         book.price = request.json.get('price') or book.price
-        book.year_published = request.json.get('year_published') or book.year_published
+        book.date_published = request.json.get('date_published') or book.date_published
         # book.category_id = request.json.get('category_id') or book.category_id
         book.author_id = request.json.get('author_id') or book.author_id
+
+        # Solves issue of @validates('date_published') in models.book not applying to post-creation updates
+        if request.json.get('date_published'):
+            book_date_string = book.date_published 
+            date_object = datetime.strptime(book_date_string, '%Y-%m-%d').date()
+            if date_object >  date.today():
+                raise ValidationError("Publication date occurs after today's date")
 
         db.session.commit()
         return BookSchema(exclude=['author_id']).dump(book)

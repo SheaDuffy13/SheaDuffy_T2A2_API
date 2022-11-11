@@ -16,7 +16,7 @@ class Book(db.Model):
     description = db.Column(db.String)
     price = db.Column(db.Float, nullable=False)
     category = db.Column(db.String)
-    year_published = db.Column(db.Date)
+    date_published = db.Column(db.Date)
     
     author_id = db.Column(db.Integer, db.ForeignKey('authors.id'), nullable=False)
     # category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
@@ -34,10 +34,6 @@ class BookSchema(ma.Schema):
     # author = fields.Nested('AuthorSchema', only=['id', 'name', 'bio'])
 
 
-    author_id = fields.String(required=True, validate=And(
-        Length(min=1, error="Author must be at least 1 character long"),
-        Regexp('^[a-zA-Z ]+$')
-    ))
     title = fields.String(required=True, validate=
         Length(min=1, error="Title must be at least 1 character long"))
 
@@ -45,12 +41,12 @@ class BookSchema(ma.Schema):
         Length(min=1, error='Description must be at least 1 character long')
     )
 
-    year_published = fields.Date()
+    date_published = fields.Date()
 
-    @validates('year_published') 
-    def validate_year_published(self, year):
+    @validates('date_published') 
+    def validate_date_published(self, date):
         # if year > datetime.date.today().year:
-        if year >  date.today():
+        if date >  date.today():
             raise ValidationError("Publication date occurs after today's date")
 
     # price = fields.Float(validate=And(
@@ -65,5 +61,5 @@ class BookSchema(ma.Schema):
 
     class Meta:
         ordered = True
-        fields = ('id', 'title', 'category', 'description', 'price', 'year_published', 'author_id', 'author')
+        fields = ('id', 'title', 'category', 'description', 'price', 'date_published', 'author_id', 'author')
 

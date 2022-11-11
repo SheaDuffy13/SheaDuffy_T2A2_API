@@ -15,8 +15,10 @@ class Author(db.Model):
 class AuthorSchema(ma.Schema):
     books = fields.List(fields.Nested('BookSchema', exclude=['author']))
 
-    name = fields.String(required=True, validate=Length(min=1, error='Name must be at least 1 character long')
-    )
+    name = fields.String(required=True, validate=And(
+        Length(min=1, error="Author must be at least 1 character long"),
+        Regexp('^[a-zA-Z ]+$')
+    ))
 
     bio = fields.String(validate=Length(min=1, error='Name must be at least 1 character long')
     )
