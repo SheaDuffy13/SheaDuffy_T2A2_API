@@ -15,16 +15,11 @@ def get_all_authors():
     authors = db.session.scalars(stmt)
     return AuthorSchema(many=True, exclude=['books']).dump(authors)
 
-# @categories_bp.route('/<string:category_name>/')
 @authors_bp.route('/<int:id>/')
 def get_author(id):
-
-    # book_stmt = db.select(Category.books).filter_by(id=id)
-    # book_stmt = db.select(Book).filter_by(category_id=id)
     book_stmt = db.select(Author).filter_by(id=id)
     books = db.session.scalars(book_stmt)
     if books:
-        # return BookSchema(many=True).dump(books)
         return AuthorSchema(many=True).dump(books)
     else:
         return {'error': f'category not found with id {id}'}, 404

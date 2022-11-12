@@ -1,10 +1,9 @@
-from unicodedata import category
+# from unicodedata import category
 from flask import Blueprint
 from init import db, bcrypt
 from models.book import Book
 from models.user import User
 from models.author import Author
-# from models.category import Category
 
 db_commands = Blueprint('db', __name__)
 
@@ -33,7 +32,6 @@ def seed_db():
             name='John Smith',
             email='user@example.com',
             password=bcrypt.generate_password_hash('bacon').decode('utf-8'),
-            # password = 'eggs',
             address = '123 road St, Suburb, QLD',
             phone = '1002003001',
         )
@@ -42,22 +40,6 @@ def seed_db():
     # Add the object as a new row to the table
     db.session.add_all(users)
     db.session.commit()
-
-    # categories = [
-    #     Category(
-    #         name = 'horror'
-    #     ),
-    #     Category(
-    #         name='romance'
-    #     ),
-    #     Category(
-    #         name='fantasy'
-    #     ),
-    # ]
-
-    # # Add the object as a new row to the table
-    # db.session.add_all(categories)
-    # db.session.commit()
 
     authors = [
         Author(
@@ -94,9 +76,8 @@ def seed_db():
             description = 'A booky book',
             price = 10.00,
             date_published = '2005-04-07',
-            category = 'fantasy'
-            # category_id = categories[2].id
-            # category = categories[2]
+            category = 'fantasy',
+            in_stock = True
         ),
         Book(
             title = 'Empire Of The Vampire',
@@ -105,9 +86,8 @@ def seed_db():
             description = 'A booky book book',
             price = 10.00,
             date_published = '2005-04-07',
-            category = 'fantasy'
-            # category_id = categories[2].id
-            # category = categories[2]
+            category = 'fantasy',
+            in_stock = True
         ),
         Book(
             title = 'Sense And Sensibility',
@@ -116,9 +96,8 @@ def seed_db():
             description = 'Ye olde jaunt',
             price = 10.00,
             date_published = '2005-04-07',
-            category = 'romance'
-            # category_id = categories[1].id
-            # category = categories[1]
+            category = 'romance',
+            in_stock = True
         ),
         Book(
             title = 'Twilight',
@@ -127,9 +106,8 @@ def seed_db():
             description = 'Hold on tight spider monkey',
             price = 10.00,
             date_published = '2005-04-07',
-            category = 'romance'
-            # category_id = categories[1].id
-            # category = categories[1]
+            category = 'romance',
+            in_stock = True
         ),
         Book(
             title = 'Misery',
@@ -138,9 +116,8 @@ def seed_db():
             description = 'crazy lady break ankles',
             price = 10.00,
             date_published = '2005-04-07',
-            category = 'horror'
-            # category_id = categories[0].id
-            # category = categories[0]
+            category = 'horror',
+            in_stock = True
         ),
         Book(
             title = 'The Call Of Cthulhu',
@@ -149,9 +126,8 @@ def seed_db():
             description = 'calamari boi',
             price = 10.00,
             date_published = '2005-04-07',
-            category = 'horror'
-            # category_id = categories[0].id
-            # category = categories[0]
+            category = 'horror',
+            in_stock = True
         )
     ]
     

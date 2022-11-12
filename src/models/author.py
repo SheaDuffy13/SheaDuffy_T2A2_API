@@ -1,6 +1,6 @@
 from init import db, ma
 from marshmallow import fields
-from marshmallow.validate import Length, OneOf, And, Regexp
+from marshmallow.validate import Length, And, Regexp
 
 class Author(db.Model):
     __tablename__ = 'authors'
@@ -10,7 +10,6 @@ class Author(db.Model):
     bio = db.Column(db.String)
     books = db.relationship('Book', back_populates='author', cascade='all, delete')
 
-    # orders = db.relationship('Order', back_populates='book', cascade='all, delete')
 
 class AuthorSchema(ma.Schema):
     books = fields.List(fields.Nested('BookSchema', exclude=['author']))

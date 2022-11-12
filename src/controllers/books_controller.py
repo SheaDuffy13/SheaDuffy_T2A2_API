@@ -1,9 +1,9 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request
 from init import db
-from models.user import User, UserSchema
+# from models.user import User, UserSchema
 from models.book import Book, BookSchema
 from models.author import Author, AuthorSchema
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
 from controllers.auth_controller import authorize
 from datetime import date, datetime
 from marshmallow.exceptions import ValidationError
@@ -31,12 +31,10 @@ def get_one_book(id):
 
 @books_bp.route("/search/")
 def search_books():
-    # if request.json['title']: 
     if request.json.get('title'):
         stmt = db.select(Book).filter_by(title=request.json['title'].title())
         books = db.session.scalars(stmt)
         return BookSchema(many=True, exclude=['author_id']).dump(books)
-    # elif request.json['author']:
     elif request.json.get('author'):
         stmt = db.select(Author).filter_by(name=request.json['author'].title())
         author = db.session.scalars(stmt)
@@ -55,6 +53,8 @@ def add_book():
         description = data['description'],
         price = data['price'],
         date_published = data['date_published'],
+        in_stock = data['in_stock'],
+        category = data['category']
     )
 
     # Add and commit book to DB
@@ -72,17 +72,20 @@ def update_book(id):
     book = db.session.scalar(stmt)
     if book:
         book.title = request.json.get('title') or book.title
-        # book.author = request.json.get('author') or book.author
         book.author_id = request.json.get('author_id') or book.author_id
         book.description = request.json.get('description') or book.description
         book.price = request.json.get('price') or book.price
+        book.category = request.json.get('category') or book.category
         book.date_published = request.json.get('date_published') or book.date_published
-        # book.category_id = request.json.get('category_id') or book.category_id
-        book.author_id = request.json.get('author_id') or book.author_id
+         # Solves issue with updating boolean values to False
+        if request.json.get('in_stock') is not None:
+            book.in_stock = request.json.get('in_stock')
+        else:
+            book.in_stock = book.in_stock
 
-        # Solves issue of @validates('date_published') in models.book not applying to post-creation updates
+        # Solves issue with @validates('date_published') in models.book not applying to updates
         if request.json.get('date_published'):
-            book_date_string = book.date_published 
+            book_date_string = book.date_published
             date_object = datetime.strptime(book_date_string, '%Y-%m-%d').date()
             if date_object >  date.today():
                 raise ValidationError("Publication date occurs after today's date")

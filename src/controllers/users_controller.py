@@ -9,15 +9,15 @@ from controllers.auth_controller import authorize
 users_bp = Blueprint('users', __name__, url_prefix='/users')
 
 
-@users_bp.route('/display_all_users/')
-def display_all_users():
+@users_bp.route('/')
+def diaply_all_users():
     stmt = db.select(User)
     users = db.session.scalars(stmt)
     return UserSchema(many=True, exclude=['password']).dump(users)
 
 
 @users_bp.route('/<int:id>/')
-def get_user(id):
+def display_one_user(id):
     stmt = db.select(User).filter_by(id=id)
     user = db.session.scalar(stmt)
     if user:
@@ -27,7 +27,7 @@ def get_user(id):
 
 
 @users_bp.route('/register/', methods=['POST'])
-def user_register():
+def register_user():
     try:
         # Create a new User model instance from the user_info
         user = User(
@@ -56,7 +56,11 @@ def update_user(id):
         user.password = request.json.get('password') or user.password
         user.address = request.json.get('address') or user.address
         user.phone = request.json.get('phone') or user.phone
-        user.is_admin = request.json.get('is_admin') or user.is_admin
+        # Solves issue with updating boolean values to False
+        if request.json.get('is_admin') is not None:
+            user.is_admin = request.json.get('is_admin')
+        else:
+            user.is_admin = user.is_admin
 
         db.session.commit()
         return UserSchema(exclude=['password']).dump(user)
