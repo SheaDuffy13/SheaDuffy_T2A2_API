@@ -21,4 +21,4 @@ class WishlistSchema(ma.Schema):
 
     class Meta:
         ordered = True
-        fields = ('id', 'user_id', 'wishlist_items') #'user', 
+        fields = ('id', 'user_id', 'user', 'wishlist_items') #'user', 

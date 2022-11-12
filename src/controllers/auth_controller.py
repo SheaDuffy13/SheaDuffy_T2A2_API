@@ -4,6 +4,9 @@ from datetime import timedelta
 from models.user import User, UserSchema
 from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+from models.wishlist import Wishlist, WishlistSchema
+from models.wishlist_item import Wishlist_Item
+from models.book import Book, BookSchema
 
 from marshmallow.exceptions import ValidationError
 import re
@@ -31,6 +34,14 @@ def register_user():
         # Add and commit user to DB
         db.session.add(user)
         db.session.commit()
+        
+        # Creates a wishlist and assigns it to the user
+        wishlist = Wishlist(
+            user_id = user.id
+        )
+        db.session.add(wishlist)
+        db.session.commit()
+
         # Respond to client
         return UserSchema().dump(user), 201 #exclude=['password']
     except IntegrityError:
