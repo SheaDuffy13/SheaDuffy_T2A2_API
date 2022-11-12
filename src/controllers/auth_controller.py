@@ -28,3 +28,4 @@ def authorize():
     user = db.session.scalar(stmt)
     if not user.is_admin:
         abort(401)
+

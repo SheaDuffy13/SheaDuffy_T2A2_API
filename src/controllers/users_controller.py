@@ -2,7 +2,7 @@ from flask import Blueprint, request, abort
 from init import db, bcrypt
 from models.user import User, UserSchema
 from sqlalchemy.exc import IntegrityError
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from controllers.auth_controller import authorize
 
 
@@ -53,10 +53,10 @@ def update_user(id):
     if user:
         user.name = request.json.get('name') or user.name
         user.email = request.json.get('email') or user.email
-        user.password = request.json.get('password') or user.password
         user.address = request.json.get('address') or user.address
         user.phone = request.json.get('phone') or user.phone
-        user.password = bcrypt.generate_password_hash(request.json['password']).decode('utf8') or user.password
+        if request.json.get('password'):
+            user.password = bcrypt.generate_password_hash(request.json.get('password')).decode('utf8') or user.password
         # Solves issue with updating boolean values to False
         if request.json.get('is_admin') is not None:
             user.is_admin = request.json.get('is_admin')
