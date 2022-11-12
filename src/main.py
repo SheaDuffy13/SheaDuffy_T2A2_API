@@ -1,7 +1,7 @@
 from flask import Flask
 from init import db, ma, bcrypt, jwt
-from models.user import User, UserSchema
-from models.book import Book, BookSchema
+# from models.user import User, UserSchema
+# from models.book import Book, BookSchema
 from flask_bcrypt import Bcrypt
 # from flask_jwt_extended import JWTManager
 from controllers.cli_controller import db_commands
@@ -9,6 +9,7 @@ from controllers.books_controller import books_bp
 from controllers.authors_controller import authors_bp
 from controllers.users_controller import users_bp
 from controllers.auth_controller import auth_bp
+from controllers.wishlist_controller import wishlist_bp
 from marshmallow.exceptions import ValidationError
 
 import os
@@ -56,5 +57,6 @@ def create_app():
     app.register_blueprint(authors_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(users_bp)
+    app.register_blueprint(wishlist_bp)
 
     return app

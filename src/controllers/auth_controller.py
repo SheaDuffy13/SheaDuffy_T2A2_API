@@ -5,8 +5,6 @@ from models.user import User, UserSchema
 from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 
-from marshmallow import fields, validates
-from marshmallow.validate import Length, OneOf, And, Regexp
 from marshmallow.exceptions import ValidationError
 import re
 
@@ -48,6 +46,7 @@ def auth_login():
     if user and bcrypt.check_password_hash(user.password, request.json['password']):
         # return UserSchema(exclude=['password']).dump(user)
         token = create_access_token(identity=str(user.id), expires_delta=timedelta(days=1))
+        # token = create_access_token(identity=user.id, expires_delta=timedelta(days=1))
         return {'email': user.email, 'token': token, 'is_admin': user.is_admin}
     else:
         return {'error': 'Invalid email or password'}, 401

@@ -21,6 +21,7 @@ class Book(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('authors.id'), nullable=False)
 
     author = db.relationship('Author', back_populates='books')
+    wishlist_items = db.relationship('Wishlist_Item', back_populates='book')
 
 class BookSchema(ma.Schema):
     

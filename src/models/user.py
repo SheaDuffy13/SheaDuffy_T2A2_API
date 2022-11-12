@@ -1,8 +1,7 @@
 from init import db, ma
 from marshmallow import fields
-from marshmallow import fields, validate
-from marshmallow.validate import Length, OneOf, And, Regexp
-from marshmallow.exceptions import ValidationError
+from marshmallow.validate import Length, And, Regexp
+from marshmallow.validate import Regexp
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -14,15 +13,17 @@ class User(db.Model):
     password = db.Column(db.String, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
 
-    # orders = db.relationship('Order', back_populates='user', cascade='all, delete')
+    wishlist = db.relationship('Wishlist', back_populates='user', cascade='all, delete')
 
 class UserSchema(ma.Schema):
 
     password = fields.String(required=True, validate=Regexp('^(?=\S{6,20}$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$',
     error='Password must be more than 6 characters and contain an uppercase letter and a number')
     )
+    email = fields.String(required=True, validate=Length(min=1, max=20, error='Email cannot be empty'))
+    wishlist = fields.List(fields.Nested('WishlistSchema', exclude=['user']))
 
     class Meta:
         ordered = True
-        fields = ('id', 'name', 'email', 'password', 'address', 'is_admin')
+        fields = ('id', 'name', 'email', 'password', 'address', 'is_admin', 'wishlist')
 

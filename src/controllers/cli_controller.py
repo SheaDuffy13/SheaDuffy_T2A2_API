@@ -4,39 +4,47 @@ from init import db, bcrypt
 from models.book import Book
 from models.user import User
 from models.author import Author
+from models.wishlist import Wishlist
+from models.wishlist_item import Wishlist_Item
 
 db_commands = Blueprint('db', __name__)
 
+# Assigns terminal command to create all tables in database
 @db_commands.cli.command('create')
 def create_all():
+    # Create all tables in database
     db.create_all()
     print("Tables created")
 
+# Assigns a terminal command to delete all tables in database
 @db_commands.cli.command('drop')
 def drop_db():
+    # Delete all tables in database
     db.drop_all()
     print("Tables dropped")
 
+# Assigns a terminal command to seed all tables in database
 @db_commands.cli.command('seed')
 def seed_db():
     users = [
         User(
             name = 'Admin Joe',
             email='admin@example.com',
-            password=bcrypt.generate_password_hash('eggs').decode('utf-8'),
+            password=bcrypt.generate_password_hash('Eggs12').decode('utf-8'),
             address = '',
             is_admin=True
         ),
         User(
             name='John Smith',
             email='user@example.com',
-            password=bcrypt.generate_password_hash('bacon').decode('utf-8'),
+            password=bcrypt.generate_password_hash('Bacon12').decode('utf-8'),
             address = '123 road St, Suburb, QLD',
         )
     ]
 
-    # Add the object as a new row to the table
+    # Add the users as new rows to the table
     db.session.add_all(users)
+    # Commit the changes
     db.session.commit()
 
     authors = [
@@ -62,8 +70,9 @@ def seed_db():
         ),
     ]
 
-    # Add the object as a new row to the table
+    # Add the authors as new rows to the table
     db.session.add_all(authors)
+    # Commit the changes
     db.session.commit()
 
     books = [
@@ -128,9 +137,32 @@ def seed_db():
             in_stock = True
         )
     ]
-    
+    # # Add the books as new rows to the table
     db.session.add_all(books)
+    # Commit the changes
     db.session.commit()
 
+    wishlists = [
+        Wishlist(
+            user_id = 2,
+        ),
+    ]
+    db.session.add_all(wishlists)
+    db.session.commit()
+
+
+    wishlist_items = [
+        Wishlist_Item(
+            wishlist_id = 1,
+            book_id = 1
+        ),
+        Wishlist_Item(
+            wishlist_id = 1,
+            book_id = 2
+        ),
+        
+    ]
+    db.session.add_all(wishlist_items)
+    db.session.commit()
 
     print("Table seeded")
