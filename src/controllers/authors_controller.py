@@ -48,6 +48,8 @@ def update_author(id):
     stmt = db.select(Author).filter_by(id=id)
     author = db.session.scalar(stmt)
     if author:
+        # Load AuthorSchema data in order to access validation rules
+        data = AuthorSchema().load(request.json)
         author.name = request.json.get('title') or author.name
         author.bio = request.json.get('bio') or author.bio
 

@@ -85,6 +85,8 @@ def update_book(id):
     stmt = db.select(Book).filter_by(id=id)
     book = db.session.scalar(stmt)
     if book:
+        # Load BookSchema data in order to access validation rules
+        data = BookSchema().load(request.json)
         book.title = request.json.get('title') or book.title
         book.author_id = request.json.get('author_id') or book.author_id
         book.description = request.json.get('description') or book.description

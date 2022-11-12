@@ -1,11 +1,8 @@
-from flask import Blueprint, request, abort
+from flask import Blueprint, request
 from init import db, bcrypt
 from models.user import User, UserSchema
-# from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from controllers.auth_controller import authorize
-from marshmallow.exceptions import ValidationError
-import re
 
 
 users_bp = Blueprint('users', __name__, url_prefix='/users')
@@ -15,6 +12,7 @@ users_bp = Blueprint('users', __name__, url_prefix='/users')
 
 # Route for admins to see all users
 @users_bp.route('/')
+@jwt_required()
 def display_users():
     authorize()
     stmt = db.select(User)
@@ -51,6 +49,8 @@ def update_selected_user(id):
     stmt = db.select(User).filter_by(id=id)
     user = db.session.scalar(stmt)
     if user:
+        # Load UserSchema data in order to access validation rules
+        data = UserSchema().load(request.json)
         # Updates user detail in the database based on json request or lack of
         user.name = request.json.get('name') or user.name
         user.email = request.json.get('email') or user.email
@@ -94,20 +94,19 @@ def update_account():
     stmt = db.select(User).filter_by(id=user_id)
     user = db.session.scalar(stmt)
     if user:
-        # Updates user detail in the database based on json request or lack of
+        # Load UserSchema data in order to access validation rules
+        data = UserSchema().load(request.json)
+        # Updates user detail in database based on json request or lack of
         user.name = request.json.get('name') or user.name
         user.email = request.json.get('email') or user.email
-        # user.address = request.json.get('address') or user.address
+        # So password key isn't required
         if request.json.get('password'):
-            # Fixes issue with fields.validate in model.user not working on password
-            if not re.match(r'^(?=\S{6,20}$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$', request.json.get('password')):
-                raise ValidationError("Password must be more than 6 characters and contain an uppercase letter and a number")
             # Hashes password and stores in databse
-            user.password = bcrypt.generate_password_hash(request.json.get('password')).decode('utf8') or user.password
-        # Commit session to databse
+            user.password = bcrypt.generate_password_hash(request.json.get('password')).decode('utf8')
+        # # Commit session to databse
         db.session.commit()
         # Dsiplays updated user info to client
-        return UserSchema(exclude=['password']).dump(user)
+        return UserSchema(exclude=['wishlist', 'password']).dump(user)
     else:
         return {'error': f'User not found with id {id}'}, 404
 

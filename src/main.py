@@ -1,9 +1,5 @@
 from flask import Flask
 from init import db, ma, bcrypt, jwt
-# from models.user import User, UserSchema
-# from models.book import Book, BookSchema
-from flask_bcrypt import Bcrypt
-# from flask_jwt_extended import JWTManager
 from controllers.cli_controller import db_commands
 from controllers.books_controller import books_bp
 from controllers.authors_controller import authors_bp
@@ -12,13 +8,11 @@ from controllers.auth_controller import auth_bp
 from controllers.wishlist_controller import wishlist_bp
 from marshmallow.exceptions import ValidationError
 from sqlalchemy.exc import StatementError
-
 import os
 
 def create_app():
     app = Flask(__name__)
 
-    
     @app.errorhandler(ValidationError)
     def validation_error(err):
         return {'error': err.messages}, 400
@@ -53,6 +47,10 @@ def create_app():
 
     @app.errorhandler(AttributeError)
     def attribute_err(err):
+        return {"error": str(err)}, 401
+    
+    @app.errorhandler(RuntimeError)
+    def runtime_error(err):
         return {"error": str(err)}, 401
 
 

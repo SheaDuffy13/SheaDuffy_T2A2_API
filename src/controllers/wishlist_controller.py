@@ -1,12 +1,10 @@
-import os
 from flask import Blueprint
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from init import db
-# from models.user import User, UserSchema
 from models.wishlist import Wishlist, WishlistSchema
 from models.wishlist_item import Wishlist_Item
-from models.book import Book, BookSchema
-# from models.user import User
+from models.book import Book
+from init import db
+
 
 wishlist_bp = Blueprint('wishlist', __name__, url_prefix='/wishlist')
 
