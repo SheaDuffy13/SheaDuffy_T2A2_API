@@ -26,24 +26,6 @@ def display_one_user(id):
         return {'error': f'Book not found with id {id}'}, 404
 
 
-@users_bp.route('/register/', methods=['POST'])
-def register_user():
-    try:
-        # Create a new User model instance from the user_info
-        user = User(
-            email = request.json['email'],
-            password = bcrypt.generate_password_hash(request.json['password']).decode('utf8'),
-            name = request.json.get('name')
-        )
-        # Add and commit user to DB
-        db.session.add(user)
-        db.session.commit()
-        # Respond to client
-        return UserSchema(exclude=['password']).dump(user), 201
-    except IntegrityError:
-        return {'error': 'Email address already in use'}, 409
-
-
 @users_bp.route('/update_user/<int:id>/', methods=['PUT', 'PATCH'])
 @jwt_required()
 def update_user(id):
@@ -54,7 +36,6 @@ def update_user(id):
         user.name = request.json.get('name') or user.name
         user.email = request.json.get('email') or user.email
         user.address = request.json.get('address') or user.address
-        user.phone = request.json.get('phone') or user.phone
         if request.json.get('password'):
             user.password = bcrypt.generate_password_hash(request.json.get('password')).decode('utf8') or user.password
         # Solves issue with updating boolean values to False

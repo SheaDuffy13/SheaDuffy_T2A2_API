@@ -25,7 +25,6 @@ def seed_db():
             email='admin@example.com',
             password=bcrypt.generate_password_hash('eggs').decode('utf-8'),
             address = '',
-            phone = '155620024',
             is_admin=True
         ),
         User(
@@ -33,7 +32,6 @@ def seed_db():
             email='user@example.com',
             password=bcrypt.generate_password_hash('bacon').decode('utf-8'),
             address = '123 road St, Suburb, QLD',
-            phone = '1002003001',
         )
     ]
 

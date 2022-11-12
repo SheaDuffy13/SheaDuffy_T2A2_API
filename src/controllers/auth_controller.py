@@ -5,7 +5,38 @@ from models.user import User, UserSchema
 from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 
+from marshmallow import fields, validates
+from marshmallow.validate import Length, OneOf, And, Regexp
+from marshmallow.exceptions import ValidationError
+import re
+
+
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
+
+
+
+@auth_bp.route('/register/', methods=['POST'])
+def register_user():
+    
+    try:
+        # Create a new User model instance
+        user = User(
+            email = request.json['email'],
+            password = bcrypt.generate_password_hash(request.json['password']).decode('utf8'),
+            name = request.json['name'],
+            address = request.json['address'],
+            is_admin = request.json['is_admin']
+        )
+        # Fixes issue with fields.validate in model.user not working on password. Seems like it's evaluating the hashed password not raw input.
+        if not re.match(r'^(?=\S{6,20}$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$', request.json.get('password')):
+            raise ValidationError("Password must be more than 6 characters and contain an uppercase letter and a number")
+        # Add and commit user to DB
+        db.session.add(user)
+        db.session.commit()
+        # Respond to client
+        return UserSchema().dump(user), 201 #exclude=['password']
+    except IntegrityError:
+        return {'error': 'Email address already in use'}, 409
 
 
 @auth_bp.route('/login/', methods=['POST'])

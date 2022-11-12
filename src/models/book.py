@@ -36,7 +36,7 @@ class BookSchema(ma.Schema):
     # in_stock = fields.Boolean(default=False)
     date_published = fields.Date()
 
-    @validates('date_published') 
+    @validates('date_published')
     def validate_date_published(self, date_published):
         if date_published >  date.today():
             raise ValidationError("Publication date occurs after today's date")

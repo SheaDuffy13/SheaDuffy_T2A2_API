@@ -10,19 +10,19 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     email = db.Column(db.String, nullable=False, unique=True)
-    password = db.Column(db.String, nullable=False)
     address = db.Column(db.String)
-    phone = db.Column(db.String)
+    password = db.Column(db.String, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
 
     # orders = db.relationship('Order', back_populates='user', cascade='all, delete')
 
 class UserSchema(ma.Schema):
 
-    phone = fields.Integer(validate=Regexp('^[0-9 ]+$', error='Only numbers are accepted')
+    password = fields.String(required=True, validate=Regexp('^(?=\S{6,20}$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$',
+    error='Password must be more than 6 characters and contain an uppercase letter and a number')
     )
 
     class Meta:
         ordered = True
-        fields = ('id', 'name', 'email', 'password', 'address', 'phone', 'is_admin')
+        fields = ('id', 'name', 'email', 'password', 'address', 'is_admin')
 
