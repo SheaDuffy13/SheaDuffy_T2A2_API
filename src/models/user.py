@@ -9,7 +9,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     email = db.Column(db.String, nullable=False, unique=True)
-    address = db.Column(db.String)
+    # address = db.Column(db.String)
     password = db.Column(db.String, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
 
@@ -25,5 +25,5 @@ class UserSchema(ma.Schema):
 
     class Meta:
         ordered = True
-        fields = ('id', 'name', 'email', 'password', 'address', 'is_admin', 'wishlist')
+        fields = ('id', 'name', 'email', 'password', 'is_admin', 'wishlist')
 

@@ -31,14 +31,12 @@ def seed_db():
             name = 'Admin Joe',
             email='admin@example.com',
             password=bcrypt.generate_password_hash('Eggs12').decode('utf-8'),
-            address = '',
             is_admin=True
         ),
         User(
             name='John Smith',
             email='user@example.com',
             password=bcrypt.generate_password_hash('Bacon12').decode('utf-8'),
-            address = '123 road St, Suburb, QLD',
         )
     ]
 
@@ -78,7 +76,6 @@ def seed_db():
     books = [
         Book(
             title = 'Nevernight',
-            # author = 'Jay Kristoff',
             author = authors[0],
             description = 'A booky book',
             price = 10.00,
@@ -88,7 +85,6 @@ def seed_db():
         ),
         Book(
             title = 'Empire Of The Vampire',
-            # author = 'Jay Kristoff',
             author = authors[0],
             description = 'A booky book book',
             price = 10.00,
@@ -98,7 +94,6 @@ def seed_db():
         ),
         Book(
             title = 'Sense And Sensibility',
-            # author = 'Jane Austin',
             author = authors[1],
             description = 'Ye olde jaunt',
             price = 10.00,
@@ -108,7 +103,6 @@ def seed_db():
         ),
         Book(
             title = 'Twilight',
-            # author = 'Stephenie Meyer',
             author = authors[2],
             description = 'Hold on tight spider monkey',
             price = 10.00,
@@ -118,7 +112,6 @@ def seed_db():
         ),
         Book(
             title = 'Misery',
-            # author = 'Stephen King',
             author = authors[3],
             description = 'crazy lady break ankles',
             price = 10.00,
@@ -128,7 +121,6 @@ def seed_db():
         ),
         Book(
             title = 'The Call Of Cthulhu',
-            # author = 'H. P. Lovecraft',
             author = authors[4],
             description = 'calamari boi',
             price = 10.00,
@@ -144,6 +136,9 @@ def seed_db():
 
     wishlists = [
         Wishlist(
+            user_id = 1,
+        ),
+        Wishlist(
             user_id = 2,
         ),
     ]
@@ -153,11 +148,11 @@ def seed_db():
 
     wishlist_items = [
         Wishlist_Item(
-            wishlist_id = 1,
+            wishlist_id = 2,
             book_id = 1
         ),
         Wishlist_Item(
-            wishlist_id = 1,
+            wishlist_id = 2,
             book_id = 2
         ),
         

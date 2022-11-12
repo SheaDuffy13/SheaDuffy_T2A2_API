@@ -1,8 +1,8 @@
 from flask import Blueprint, request
 from init import db
-from flask_jwt_extended import jwt_required, get_jwt_identity
-from models.user import User, UserSchema
-from models.book import Book, BookSchema
+from flask_jwt_extended import jwt_required
+# from models.user import User, UserSchema
+# from models.book import Book, BookSchema
 from models.author import Author, AuthorSchema
 from controllers.auth_controller import authorize
 

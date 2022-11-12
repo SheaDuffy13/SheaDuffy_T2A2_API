@@ -15,7 +15,7 @@ class Wishlist_Item(db.Model):
 
 
 class Wishlist_ItemSchema(ma.Schema):
-    book = fields.Nested('BookSchema')
+    book = fields.Nested('BookSchema', exclude=['author_id'])
     wishlist = fields.Nested('WishlistSchema') # , exclude=['wishlist_id']
     class Meta:
         fields = ('id', 'wishlist', 'book') #, 'wishlist_id', 'book_id'

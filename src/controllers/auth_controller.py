@@ -25,7 +25,6 @@ def register_user():
             email = request.json['email'],
             password = bcrypt.generate_password_hash(request.json['password']).decode('utf8'),
             name = request.json['name'],
-            address = request.json['address'],
             is_admin = request.json['is_admin']
         )
         # Fixes issue with fields.validate in model.user not working on password. Seems like it's evaluating the hashed password not raw input.
@@ -43,7 +42,7 @@ def register_user():
         db.session.commit()
 
         # Respond to client
-        return UserSchema().dump(user), 201 #exclude=['password']
+        return UserSchema(exclude=['password']).dump(user), 201
     except IntegrityError:
         return {'error': 'Email address already in use'}, 409
 

@@ -53,9 +53,15 @@ def add_to_order(id):
     stmt = db.select(Wishlist).where(Wishlist.user_id==user_id)
     wishlist = db.session.scalar(stmt)
     if wishlist:
-        book_stmt = db.select(Wishlist_Item).where(Wishlist_Item.book_id==id)
+        # book_stmt = db.select(Book).where(Book.id==id)
+        book_stmt = db.select(Book).where(Book.id==id)
         book = db.session.scalar(book_stmt)
-        if not book:
+
+        # wish_item_stmt = db.select(Wishlist_Item).where(Wishlist_Item==wishlist, Wishlist_Item.book==book)
+        wish_item_stmt = db.select(Wishlist_Item).where(Wishlist_Item.wishlist==wishlist, Wishlist_Item.book==book)
+        wish_item = db.session.scalar(wish_item_stmt)
+
+        if not wish_item:
             wishlist_item = Wishlist_Item(
                 wishlist_id = wishlist.id,
                 # book_id = request.json['book_id']

@@ -11,12 +11,18 @@ import re
 users_bp = Blueprint('users', __name__, url_prefix='/users')
 
 
+# ADMIN ROUTES ----------------------------------------------------------------------
+
+# Route for admins to see all users
 @users_bp.route('/')
-def diaply_all_users():
+def display_users():
+    authorize()
     stmt = db.select(User)
     users = db.session.scalars(stmt)
-    return UserSchema(many=True, exclude=['password']).dump(users)
+    return UserSchema(many=True, exclude=['password', 'wishlist']).dump(users)
 
+
+# Route for admins to see all admin users
 @users_bp.route('/admins/')
 @jwt_required()
 def diaply_all_admins():
@@ -26,22 +32,21 @@ def diaply_all_admins():
     return UserSchema(many=True, exclude=['password']).dump(admins)
 
 
+# Route for admins to see a specific user's details
 @users_bp.route('/<int:id>/')
 def display_one_user(id):
+    authorize()
     stmt = db.select(User).filter_by(id=id)
     user = db.session.scalar(stmt)
     if user:
-        return UserSchema().dump(user)
+        return UserSchema(exclude=['password', 'wishlist']).dump(user)
     else:
-        return {'error': f'Book not found with id {id}'}, 404
+        return {'error': f'User not found with id {id}'}, 404
 
-
-# ADMIN ROUTES ----------------------------------------------------------------------
-
-# Route for admins to update any user, exluding password
-@users_bp.route('/update_user/<int:id>/', methods=['PUT', 'PATCH'])
+# Route for admins to update any user, exluding password field
+@users_bp.route('/update_selected_user/<int:id>/', methods=['PUT', 'PATCH'])
 @jwt_required()
-def update_specific_user(id):
+def update_selected_user(id):
     authorize()
     stmt = db.select(User).filter_by(id=id)
     user = db.session.scalar(stmt)
@@ -49,13 +54,6 @@ def update_specific_user(id):
         # Updates user detail in the database based on json request or lack of
         user.name = request.json.get('name') or user.name
         user.email = request.json.get('email') or user.email
-        user.address = request.json.get('address') or user.address
-        # if request.json.get('password'):
-        #     # Fixes issue with fields.validate in model.user not working on password. Seems like it's evaluating the hashed password not raw input.
-        #     if not re.match(r'^(?=\S{6,20}$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$', request.json.get('password')):
-        #         raise ValidationError("Password must be more than 6 characters and contain an uppercase letter and a number")
-        #     user.password = bcrypt.generate_password_hash(request.json.get('password')).decode('utf8') or user.password
-
         # Solves issue with updating boolean values to False
         if request.json.get('is_admin') is not None:
             user.is_admin = request.json.get('is_admin')
@@ -67,6 +65,7 @@ def update_specific_user(id):
         return UserSchema(exclude=['password']).dump(user)
     else:
         return {'error': f'User not found with id {id}'}, 404
+
 
 # Route for admins to delete any user
 @users_bp.route('/delete_user/<int:id>/', methods=['DELETE'])
@@ -98,7 +97,7 @@ def update_account():
         # Updates user detail in the database based on json request or lack of
         user.name = request.json.get('name') or user.name
         user.email = request.json.get('email') or user.email
-        user.address = request.json.get('address') or user.address
+        # user.address = request.json.get('address') or user.address
         if request.json.get('password'):
             # Fixes issue with fields.validate in model.user not working on password
             if not re.match(r'^(?=\S{6,20}$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$', request.json.get('password')):
