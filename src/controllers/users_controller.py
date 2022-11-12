@@ -56,6 +56,7 @@ def update_user(id):
         user.password = request.json.get('password') or user.password
         user.address = request.json.get('address') or user.address
         user.phone = request.json.get('phone') or user.phone
+        user.password = bcrypt.generate_password_hash(request.json['password']).decode('utf8') or user.password
         # Solves issue with updating boolean values to False
         if request.json.get('is_admin') is not None:
             user.is_admin = request.json.get('is_admin')
