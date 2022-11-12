@@ -29,8 +29,7 @@ class BookSchema(ma.Schema):
     author = fields.Nested('AuthorSchema', exclude=['books'])
     author = fields.Nested('AuthorSchema', only=['id', 'name'])
     title = fields.String(required=True, validate=
-        Length(min=1, error="Title must be at least 1 character long"))
-
+    Length(min=1, error="Title must be at least 1 character long"))
     description = fields.String(validate=
         Length(min=1, error='Description must be at least 1 character long')
     )

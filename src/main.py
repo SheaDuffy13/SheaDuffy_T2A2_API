@@ -11,6 +11,7 @@ from controllers.users_controller import users_bp
 from controllers.auth_controller import auth_bp
 from controllers.wishlist_controller import wishlist_bp
 from marshmallow.exceptions import ValidationError
+from sqlalchemy.exc import StatementError
 
 import os
 
@@ -41,6 +42,18 @@ def create_app():
     @app.errorhandler(KeyError)
     def key_error(err):
         return {'error': f'The field {err} is required.'}, 400
+    
+    @app.errorhandler(TypeError)
+    def f(err):
+        return {'error': str(err)}, 400
+    
+    @app.errorhandler(StatementError)
+    def statement_error(err):
+        return {"error": "Value is not of the correct type or the related entity does not exist"}, 400
+
+    @app.errorhandler(AttributeError)
+    def attribute_err(err):
+        return {"error": str(err)}, 401
 
 
     app.config ['JSON_SORT_KEYS'] = False
