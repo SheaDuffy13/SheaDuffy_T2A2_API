@@ -53,20 +53,19 @@ def get_wishlist():
 def add_to_order(id):
     # Determines current user
     user_id = get_jwt_identity()
-    # Selects user from database based on user_id
-    stmt = db.select(Wishlist).filter_by(user_id=user_id)
+    # Selects wishlist from database based on user_id
+    stmt = db.select(Wishlist).where(Wishlist.user_id==user_id)
     wishlist = db.session.scalar(stmt)
     if wishlist:
         wishlist_item = Wishlist_Item(
             wishlist_id = wishlist.id,
             book_id = request.json['book_id'],
-                    # = request.json.get('title')
         )
         db.session.add(wishlist_item)
         db.session.commit()
         return WishlistSchema().dump(wishlist), 201
     else:
-        return {'error': f'Wishlist not found with id {id}'}, 404
+        return {'error': f'Wishlist not found for user with id {user_id}'}, 404
 
 
 # Deletes a wishlist item
