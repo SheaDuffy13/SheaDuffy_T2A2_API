@@ -8,6 +8,7 @@ class Author(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     bio = db.Column(db.String)
+    
     books = db.relationship('Book', back_populates='author', cascade='all, delete')
 
 

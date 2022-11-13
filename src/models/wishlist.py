@@ -7,6 +7,7 @@ class Wishlist(db.Model):
     # Set colums of table to be created in database
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    
     # Set relationships of table to other tables
     wishlist_items = db.relationship('Wishlist_Item', back_populates='wishlist', cascade='all, delete')
     user = db.relationship('User', back_populates='wishlist')

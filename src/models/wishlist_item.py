@@ -7,6 +7,7 @@ class Wishlist_Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     wishlist_id = db.Column(db.Integer, db.ForeignKey('wishlists.id'), nullable=False)
     book_id = db.Column(db.Integer, db.ForeignKey('books.id'), nullable=False)
+    
     # Set relationships of table to other tables
     wishlist = db.relationship('Wishlist', back_populates='wishlist_items')
     book = db.relationship('Book', back_populates='wishlist_items')
