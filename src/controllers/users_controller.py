@@ -36,6 +36,7 @@ def diaply_all_admins():
 
 # Route for admins to see a specific user's details
 @users_bp.route('/<int:id>/')
+@jwt_required()
 def display_one_user(id):
     authorize()
     # Select user with id in url
@@ -48,7 +49,7 @@ def display_one_user(id):
         return {'error': f'User not found with id {id}'}, 404
 
 # Route for admins to update any user, exluding password field
-@users_bp.route('/update_selected_user/<int:id>/', methods=['PUT', 'PATCH'])
+@users_bp.route('/update_user/<int:id>/', methods=['PUT', 'PATCH'])
 @jwt_required()
 def update_selected_user(id):
     authorize()
@@ -86,7 +87,7 @@ def admin_delete_user(id):
         db.session.delete(user)
         db.session.commit()
         # Respond to client
-        return {'message': f"User '{user.name}' deleted successfully"}
+        return {'message': f"User '{user.email}' deleted successfully"}
     else:
         return {'error': f'User not found with id {id}'}, 404
 
@@ -135,6 +136,6 @@ def delete_account():
         # Commits the change
         db.session.commit()
         # Respond to client
-        return {'message': f"User '{user.name}' deleted successfully"}
+        return {'message': f"User '{user.email}' deleted successfully"}
     else:
         return {'error': f'User not found with id {id}'}, 404

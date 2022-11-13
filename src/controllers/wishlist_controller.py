@@ -50,7 +50,7 @@ def add_to_order(id):
                 book_id = id
                 )
         else:
-            return {'error': f'Book with id {id} already in wishlist'}, 404
+            return {'error': f'Book with id {id} already in wishlist'}, 412
         # Commit changes
         db.session.add(wishlist_item)
         db.session.commit()
