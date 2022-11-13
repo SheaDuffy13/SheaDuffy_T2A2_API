@@ -31,7 +31,7 @@ def diaply_all_admins():
     stmt = db.select(User).filter_by(is_admin=True)
     admins = db.session.scalars(stmt)
     # Return UserSchema of users selected with stmt
-    return UserSchema(many=True, exclude=['password']).dump(admins)
+    return UserSchema(many=True, exclude=['password', 'wishlist']).dump(admins)
 
 
 # Route for admins to see a specific user's details
@@ -44,7 +44,7 @@ def display_one_user(id):
     user = db.session.scalar(stmt)
     if user:
         # Return UserSchema of users selected with stmt
-        return UserSchema(exclude=['password', 'wishlist']).dump(user)
+        return UserSchema(exclude=['password']).dump(user)
     else:
         return {'error': f'User not found with id {id}'}, 404
 
@@ -69,7 +69,7 @@ def update_selected_user(id):
         # Commit session to databse
         db.session.commit()
         # Dsiplays updated user info to client
-        return UserSchema(exclude=['password']).dump(user)
+        return UserSchema(exclude=['password', 'wishlist']).dump(user)
     else:
         return {'error': f'User not found with id {id}'}, 404
 
