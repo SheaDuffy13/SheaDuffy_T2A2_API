@@ -1,8 +1,8 @@
 from flask import Blueprint, request
-from init import db, bcrypt
-from models.user import User, UserSchema
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from models.user import User, UserSchema
 from controllers.auth_controller import authorize
+from init import db, bcrypt
 
 
 users_bp = Blueprint('users', __name__, url_prefix='/users')
@@ -15,8 +15,10 @@ users_bp = Blueprint('users', __name__, url_prefix='/users')
 @jwt_required()
 def display_users():
     authorize()
+    # Select all users
     stmt = db.select(User)
     users = db.session.scalars(stmt)
+    # Return UserSchema of users selected with stmt
     return UserSchema(many=True, exclude=['password', 'wishlist']).dump(users)
 
 
@@ -25,8 +27,10 @@ def display_users():
 @jwt_required()
 def diaply_all_admins():
     authorize()
+    # Select users with is_admin set to True
     stmt = db.select(User).filter_by(is_admin=True)
     admins = db.session.scalars(stmt)
+    # Return UserSchema of users selected with stmt
     return UserSchema(many=True, exclude=['password']).dump(admins)
 
 
@@ -34,9 +38,11 @@ def diaply_all_admins():
 @users_bp.route('/<int:id>/')
 def display_one_user(id):
     authorize()
+    # Select user with id in url
     stmt = db.select(User).filter_by(id=id)
     user = db.session.scalar(stmt)
     if user:
+        # Return UserSchema of users selected with stmt
         return UserSchema(exclude=['password', 'wishlist']).dump(user)
     else:
         return {'error': f'User not found with id {id}'}, 404
@@ -72,11 +78,14 @@ def update_selected_user(id):
 @jwt_required()
 def admin_delete_user(id):
     authorize()
+    # Select user with id in url
     stmt = db.select(User).filter_by(id=id)
     user = db.session.scalar(stmt)
     if user:
+        # Delete user and commit
         db.session.delete(user)
         db.session.commit()
+        # Respond to client
         return {'message': f"User '{user.name}' deleted successfully"}
     else:
         return {'error': f'User not found with id {id}'}, 404
@@ -94,12 +103,12 @@ def update_account():
     stmt = db.select(User).filter_by(id=user_id)
     user = db.session.scalar(stmt)
     if user:
-        # Load UserSchema data in order to access validation rules
+        # Load UserSchema data to access validation rules
         data = UserSchema().load(request.json)
-        # Updates user detail in database based on json request or lack of
+        # Update user details in database based on json request or leave as is
         user.name = request.json.get('name') or user.name
         user.email = request.json.get('email') or user.email
-        # So password key isn't required
+        # So excluding password key doesn't throw and error
         if request.json.get('password'):
             # Hashes password and stores in databse
             user.password = bcrypt.generate_password_hash(request.json.get('password')).decode('utf8')
@@ -125,6 +134,7 @@ def delete_account():
         db.session.delete(user)
         # Commits the change
         db.session.commit()
+        # Respond to client
         return {'message': f"User '{user.name}' deleted successfully"}
     else:
         return {'error': f'User not found with id {id}'}, 404

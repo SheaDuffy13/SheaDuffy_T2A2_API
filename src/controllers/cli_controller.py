@@ -1,4 +1,3 @@
-# from unicodedata import category
 from flask import Blueprint
 from init import db, bcrypt
 from models.book import Book
